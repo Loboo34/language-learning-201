@@ -1,83 +1,71 @@
-# ICP Azle 201 Boilerplate
+# ICP 201 Language Learning System
 
-ICP Azle 201 Boilerplate is a comprehensive project setup designed to streamline your development process. It provides a solid foundation with pre-configured components to help you get started quickly.
+## Overview
 
-## Features
+This is a comprehensive system for language learning, facilitating decentralized language courses, user interactions, and progress tracking on the Internet Computer blockchain Typescript challenge 201. It includes features like course enrollment, lesson completion, progress tracking, and user management, demonstrating the capabilities of smart contracts for real-world language learning applications.
 
-- **React.js Setup:** The boilerplate comes with a well-structured React.js setup, making it easy to manage your frontend infrastructure.
-- **ICP Canister:** ICP Canister integration is included, offering a powerful way to manage data and interactions on the Internet Computer.
+## Structure
 
-**[Read the Getting Started Guide](link-to-your-tutorial)**
+### 1. Data Structures
 
-## Things to be explained in the course:
-1. What is Ledger? More details here: https://internetcomputer.org/docs/current/developer-docs/integrations/ledger/
-2. What is Internet Identity? More details here: https://internetcomputer.org/internet-identity
-3. What is Principal, Identity, Address? https://internetcomputer.org/internet-identity | https://yumimarketplace.medium.com/whats-the-difference-between-principal-id-and-account-id-3c908afdc1f9
-4. Canister-to-canister communication and how multi-canister development is done? https://medium.com/icp-league/explore-backend-multi-canister-development-on-ic-680064b06320
+- **Course**: Represents a language course with properties like `id`, `title`, `description`, `language`, `level`, `lessons`, and `instructor`.
+- **CoursePayload**: Used for creating or updating a course with necessary properties.
+- **LessonPayload**: Used for creating or updating a lesson with necessary properties.
+- **User**: Represents a user with properties like `id`, `name`, `email`, `languagePreferences`, `enrolledCourses`, and `progress`.
+- **ErrorType**: Variant type representing different error scenarios.
 
-## Getting started
+### 2. Storage
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/dacadeorg/icp-azle-201)
+- `languageStorage`: A `StableBTreeMap` to store languages by their IDs.
+- `enrolmentStorage`: A `StableBTreeMap` to store enrolment status.
+- `usersStorage`: A `StableBTreeMap` to store users by their IDs.
 
-If you rather want to use GitHub Codespaces, click this button instead:
+### 3. Canister Functions
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/dacadeorg/icp-azle-201?quickstart=1)
+- **Enroll User**: Enrolls a user in a language course.
+- **Complete Lesson**: Marks a lesson as completed for a user.
+- **Get Courses**: Retrieves all courses from storage.
+- **Get Lessons**: Retrieves all lessons from storage.
+- **Get Course**: Retrieves a course by its ID.
+- **Get Lesson**: Retrieves a lesson by its ID.
+- **Get User**: Retrieves a user by their ID.
+- **Update User**: Updates an existing user's progress.
+- **Delete User**: Deletes a user by their ID.
 
-**NOTE**: After deploying your canisters in GitHub Codespaces, run `./canister_urls.py` and click the links that are shown there.
+### 4. Helper Functions
 
-[![Open locally in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/dacadeorg/icp-azle-201)
+- **Generate Correlation ID**: Generates a correlation ID for tracking user progress.
+- **Verify Completion**: Verifies lesson completion based on user interactions.
+
+### 5. Dependencies
+
+- Imports necessary modules from the `"azle"` library.
+- Utilizes IC APIs like `ic.call` for blockchain interaction.
+
+### 6. Miscellaneous
+
+- Uses `globalThis.crypto` for generating random values.
+- Uses custom correlation IDs for tracking progress.
+
+### 7. Error Handling
+
+- Functions return `Result` types to handle success or different error scenarios.
+
+## Things to be explained in the course
+
+1. What is Internet Identity? More details here: <https://internetcomputer.org/internet-identity>
+2. What is Principal, Identity, Address? <https://internetcomputer.org/internet-identity>
+3. Canister-to-canister communication and how multi-canister development is done? <https://medium.com/icp-league/explore-backend-multi-canister-development-on-ic-680064b06320>
 
 ## How to deploy canisters implemented in the course
 
-### Ledger canister
-`./deploy-local-ledger.sh` - deploys a local Ledger canister. IC works differently when run locally so there is no default network token available and you have to deploy it yourself. Remember that it's not a token like ERC-20 in Ethereum, it's a native token for ICP, just deployed separately.
-This canister is described in the `dfx.json`:
-```
-	"ledger_canister": {
-  	"type": "custom",
-  	"candid": "https://raw.githubusercontent.com/dfinity/ic/928caf66c35627efe407006230beee60ad38f090/rs/rosetta-api/icp_ledger/ledger.did",
-  	"wasm": "https://download.dfinity.systems/ic/928caf66c35627efe407006230beee60ad38f090/canisters/ledger-canister.wasm.gz",
-  	"remote": {
-    	"id": {
-      	"ic": "ryjl3-tyaaa-aaaaa-aaaba-cai"
-    	}
-  	}
-	}
-```
-`remote.id.ic` - that is the principal of the Ledger canister and it will be available by this principal when you work with the ledger.
+### Backend canister
 
-Also, in the scope of this script, a minter identity is created which can be used for minting tokens
-for the testing purposes.
-Additionally, the default identity is pre-populated with 1000_000_000_000 e8s which is equal to 10_000 * 10**8 ICP.
-The decimals value for ICP is 10**8.
+`dfx deploy backend` - deploys the backend canister where the business logic is implemented.
 
-List identities:
-`dfx identity list`
-
-Switch to the minter identity:
-`dfx identity use minter`
-
-Transfer ICP:
-`dfx ledger transfer <ADDRESS>  --memo 0 --icp 100 --fee 0`
-where:
-- `--memo` is some correlation id that can be set to identify some particular transactions (we use that in the marketplace canister).
-- `--icp` is the transfer amount
-- `--fee` is the transaction fee. In this case it's 0 because we make this transfer as the minter idenity thus this transaction is of type MINT, not TRANSFER.
-- `<ADDRESS>` is the address of the recipient. To get the address from the principal, you can use the helper function from the marketplace canister - `getAddressFromPrincipal(principal: Principal)`, it can be called via the Candid UI.
-
-
-### Internet identity canister
-
-`dfx deploy internet_identity` - that is the canister that handles the authentication flow. Once it's deployed, the `js-agent` library will be talking to it to register identities. There is UI that acts as a wallet where you can select existing identities
-or create a new one.
-
-### Marketplace canister
-
-`dfx deploy dfinity_js_backend` - deploys the marketplace canister where the business logic is implemented.
-Basically, it implements functions like add, view, update, delete, and buy products + a set of helper functions.
-
-Do not forget to run `dfx generate dfinity_js_backend` anytime you add/remove functions in the canister or when you change the signatures.
+Do not forget to run `dfx generate backend` anytime you add/remove functions in the canister or when you change the signatures.
 Otherwise, these changes won't be reflected in IDL's and won't work when called using the JS agent.
 
-### Marketplace frontend canister
-`dfx deploy dfinity_js_frontend` - deployes the frontend app for the `dfinity_js_backend` canister on IC.
+### Frontend canister
+
+`dfx deploy frontend` - deployes the frontend app for the backend canister on IC.

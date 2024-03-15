@@ -19,12 +19,6 @@ import {
   bool,
   Canister,
 } from "azle";
-import {
-  Ledger,
-  binaryAddressFromAddress,
-  binaryAddressFromPrincipal,
-  hexAddressFromPrincipal,
-} from "azle/canisters/ledger";
 //import { hashCode } from "hashcode";
 import { v4 as uuidv4 } from "uuid";
 
@@ -306,47 +300,6 @@ export default Canister({
       return Ok(`Paypal Payment Completed`);
     }
   ),
-
-
-
-
-//   userEnroll: update(
-//     [EnrollmentPayload],
-//     Result(text, Message),
-    
-//     (payload) => {
-//       const user = UserStorage.get(payload);
-//       const language = LanguageStorage.get(payload.languageId);
-//       if ("None" in user) {
-//         return Err({ NotFound: "User not found" });
-//       }
-//       if ("None" in language) {
-//         return Err({ NotFound: "Language not found" });
-//       }
-//       const enroll = {
-//         id: uuidv4(),
-//         userId: payload.userId,
-//         languageId: payload.languageId,
-//         status: { Pending: "Pending" },
-//       };
-
-      
-      
-
-
-//       enrollmentStorage.insert(enroll.id, enroll);
-//       UserStorage.insert(payload.userId, user);
-//       LanguageStorage.insert(payload.languageId, language);
-
-// //add language id to user storage
-//       const tUser = user.Some;
-//       tUser.languageEnrolled.push(payload.languageId);
-     
-
-      
-//       return Ok("Enrollment successful");
-//     }
-//   ),'
 
 
 
