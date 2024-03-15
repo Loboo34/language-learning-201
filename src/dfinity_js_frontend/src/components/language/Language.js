@@ -3,15 +3,13 @@ import PropTypes from "prop-types";
 import { Card, Button, Col, Badge, Stack } from "react-bootstrap";
 import { Principal } from "@dfinity/principal";
 
-const Product = ({ product, buy }) => {
-  const { id, price, title, description, location, attachmentURL, seller, soldAmount } =
-    product;
+const Language = ({ language, buy}) => {
+const { id, name, duration, fee, students} = language
 
   const triggerBuy = () => {
     buy(id);
   };
-
-  return (
+  return(
     <Col key={id}>
       <Card className=" h-100">
         <Card.Header>
@@ -22,17 +20,11 @@ const Product = ({ product, buy }) => {
             </Badge>
           </Stack>
         </Card.Header>
-        <div className=" ratio ratio-4x3">
-          <img src={attachmentURL} alt={title} style={{ objectFit: "cover" }} />
-        </div>
         <Card.Body className="d-flex  flex-column text-center">
-          <Card.Title>{title}</Card.Title>
-          <Card.Text className="flex-grow-1 ">{description}</Card.Text>
+          <Card.Title>{name}</Card.Title>
+          <Card.Text className="flex-grow-1 ">{duration}</Card.Text>
           <Card.Text className="text-secondary">
-            <span>{location}</span>
-          </Card.Text>
-          <Card.Text className="text-secondary">
-            <span>{Principal.from(seller).toText()}</span>
+            <span>{fee}</span>
           </Card.Text>
           <Button
             variant="outline-dark"
@@ -44,12 +36,14 @@ const Product = ({ product, buy }) => {
         </Card.Body>
       </Card>
     </Col>
-  );
-};
+  )
 
-Product.propTypes = {
-  product: PropTypes.instanceOf(Object).isRequired,
+}
+
+Language.propTypes = {
+  language: PropTypes.instanceOf(Object).isRequired,
   buy: PropTypes.func.isRequired,
 };
 
-export default Product;
+
+export default Language;

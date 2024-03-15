@@ -1,25 +1,27 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
-import AddProduct from "./AddProduct";
-import Product from "./Product";
+import AddLanguage from "./AddLanguage";
+import Language from "./Language";
 import Loader from "../utils/Loader";
 import { Row } from "react-bootstrap";
 
 import { NotificationSuccess, NotificationError } from "../utils/Notifications";
 import {
-  getProducts as getProductList,
-  createProduct, buyProduct
-} from "../../utils/marketplace";
+  getLanguages as getLanguages,
+  createLanguage,
+  buyLanguage,
+} from "../../utils/languageLearning";
+//import AddLanguage from "./AddLanguage";
 
-const Products = () => {
-  const [products, setProducts] = useState([]);
+const Languages = () => {
+  const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // function to get the list of products
-  const getProducts = useCallback(async () => {
+  // function to get the list of languages
+  const getLanguages = useCallback(async () => {
     try {
       setLoading(true);
-      setProducts(await getProductList());
+      setLanguages(await getLanguages());
     } catch (error) {
       console.log({ error });
     } finally {
@@ -27,18 +29,18 @@ const Products = () => {
     }
   });
 
-  const addProduct = async (data) => {
+  const addLanguage = async (data) => {
     try {
       setLoading(true);
       const priceStr = data.price;
-      data.price = parseInt(priceStr, 10) * 10**8;
-      createProduct(data).then((resp) => {
-        getProducts();
+      data.price = parseInt(priceStr, 10) * 10 ** 8;
+      createLanguage(data).then((resp) => {
+        getLanguages();
       });
-      toast(<NotificationSuccess text="Product added successfully." />);
+      toast(<NotificationSuccess text="Language added successfully." />);
     } catch (error) {
       console.log({ error });
-      toast(<NotificationError text="Failed to create a product." />);
+      toast(<NotificationError text="Failed to create a language." />);
     } finally {
       setLoading(false);
     }
@@ -48,21 +50,21 @@ const Products = () => {
   const buy = async (id) => {
     try {
       setLoading(true);
-      await buyProduct({
-        id
+      await buyLanguage({
+        id,
       }).then((resp) => {
-        getProducts();
-        toast(<NotificationSuccess text="Product bought successfully" />);
+        getLanguages();
+        toast(<NotificationSuccess text="Language bought successfully" />);
       });
     } catch (error) {
-      toast(<NotificationError text="Failed to purchase product." />);
+      toast(<NotificationError text="Failed to purchase language." />);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    getProducts();
+    getLanguages();
   }, []);
 
   return (
@@ -71,16 +73,11 @@ const Products = () => {
         <>
           <div className="d-flex justify-content-between align-items-center mb-4">
             <h1 className="fs-4 fw-bold mb-0">Street Food</h1>
-            <AddProduct save={addProduct} />
+            <AddLanguage save={addLanguage} />
           </div>
           <Row xs={1} sm={2} lg={3} className="g-3  mb-5 g-xl-4 g-xxl-5">
-            {products.map((_product) => (
-              <Product
-                product={{
-                  ..._product,
-                }}
-                buy={buy}
-              />
+            {languages.map((language, index) => (
+              <Product key={index} Language={language} buy={buy} />
             ))}
           </Row>
         </>
@@ -91,4 +88,4 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default Languages;
