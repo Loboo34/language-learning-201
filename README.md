@@ -10,7 +10,6 @@ This is a comprehensive system for language learning, facilitating decentralized
 
 - **Course**: Represents a language course with properties like `id`, `title`, `description`, `language`, `level`, `lessons`, and `instructor`.
 - **CoursePayload**: Used for creating or updating a course with necessary properties.
-- **LessonPayload**: Used for creating or updating a lesson with necessary properties.
 - **User**: Represents a user with properties like `id`, `name`, `email`, `languagePreferences`, `enrolledCourses`, and `progress`.
 - **ErrorType**: Variant type representing different error scenarios.
 

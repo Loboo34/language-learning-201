@@ -1,9 +1,9 @@
 service: () -> {
-    addLanguage: (record {fee:nat64; duration:text; name:text}) -> (variant {Ok:record {id:text; fee:nat64; duration:text; students:vec text; name:text}; Err:variant {InvalidPayload:text; NotFound:text}});
-    addUser: (record {paymentMethod:text; name:text; email:text}) -> (variant {Ok:record {id:text; paymentMethod:text; name:text; email:text; languageEnrolled:vec text}; Err:variant {InvalidPayload:text; NotFound:text}});
-    deleteLanguage: (text) -> (variant {Ok:text; Err:variant {InvalidPayload:text; NotFound:text}});
-    deleteUser: (text) -> (variant {Ok:text; Err:variant {InvalidPayload:text; NotFound:text}});
-    enrollUser: (text, text) -> (variant {Ok:text; Err:variant {InvalidPayload:text; NotFound:text}});
+    addLanguage: (record {fee:nat64; duration:text; name:text}) -> (variant {Ok:record {id:text; fee:nat64; duration:text; students:vec text; name:text}; Err:variant {PaymentFailed:text; InvalidPayload:text; NotFound:text; PaymentCompleted:text}});
+    addUser: (record {paymentMethod:text; name:text; email:text}) -> (variant {Ok:record {id:text; paymentMethod:text; name:text; email:text; languageEnrolled:vec text}; Err:variant {PaymentFailed:text; InvalidPayload:text; NotFound:text; PaymentCompleted:text}});
+    deleteLanguage: (text) -> (variant {Ok:text; Err:variant {PaymentFailed:text; InvalidPayload:text; NotFound:text; PaymentCompleted:text}});
+    deleteUser: (text) -> (variant {Ok:text; Err:variant {PaymentFailed:text; InvalidPayload:text; NotFound:text; PaymentCompleted:text}});
+    enrollUser: (text, text) -> (variant {Ok:text; Err:variant {PaymentFailed:text; InvalidPayload:text; NotFound:text; PaymentCompleted:text}});
     getEnrolledLanguages: (text) -> (vec text) query;
     getEnrolledUsers: (text) -> (vec text) query;
     getLanguage: (text) -> (opt record {id:text; fee:nat64; duration:text; students:vec text; name:text}) query;
@@ -11,6 +11,6 @@ service: () -> {
     getLanguagesWithUsers: () -> (vec record {id:text; fee:nat64; duration:text; students:vec text; name:text}) query;
     getUser: (text) -> (opt record {id:text; paymentMethod:text; name:text; email:text; languageEnrolled:vec text}) query;
     getUsers: () -> (vec record {id:text; paymentMethod:text; name:text; email:text; languageEnrolled:vec text}) query;
-    payForCourse: (text, text) -> (variant {Ok:text; Err:variant {InvalidPayload:text; NotFound:text}});
-    unenrollUser: (text, text) -> (variant {Ok:text; Err:variant {InvalidPayload:text; NotFound:text}});
+    payForCourse: (text, text) -> (variant {Ok:text; Err:variant {PaymentFailed:text; InvalidPayload:text; NotFound:text; PaymentCompleted:text}});
+    unenrollUser: (text, text) -> (variant {Ok:text; Err:variant {PaymentFailed:text; InvalidPayload:text; NotFound:text; PaymentCompleted:text}});
 }

@@ -19,7 +19,7 @@ export async function updateUser(user) {
   return window.canister.languageLearner.updateUser(user);
 }
 
-//function to get all languages using try catch block
+//function to get all languages 
 export async function getAllLanguages() {
   try {
     return await window.canister.languageLearner.getLanguages();
@@ -32,7 +32,7 @@ export async function getAllLanguages() {
   }
 }
 
-//function to get all users using try catch block
+//function to get all users 
 export async function getAllUsers() {
   try {
     return await window.canister.languageLearner.getUsers();
@@ -45,7 +45,7 @@ export async function getAllUsers() {
   }
 }
 
-//function to get language by id using try catch block
+//function to get language by id 
 export async function getLanguageById(id) {
   try {
     return await window.canister.languageLearner.getLanguage(id);
@@ -58,7 +58,7 @@ export async function getLanguageById(id) {
   }
 }
 
-//function to enroll user in language using try catch block
+//function to enroll user in language
 export async function enrollUser(user) {
   try {
     return await window.canister.languageLearner.enrollUser(user);

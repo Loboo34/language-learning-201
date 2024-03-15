@@ -19,6 +19,12 @@ import {
   bool,
   Canister,
 } from "azle";
+import {
+  Ledger,
+  binaryAddressFromAddress,
+  binaryAddressFromPrincipal,
+  hexAddressFromPrincipal,
+} from "azle/canisters/ledger";
 //import { hashCode } from "hashcode";
 import { v4 as uuidv4 } from "uuid";
 
@@ -36,10 +42,10 @@ const LanguagePayload = Record({
   fee: nat64,
 });
 
- const Role = Variant({
-   Admin: text,
-   User: text,
- });
+//  const Role = Variant({
+//    Admin: text,
+//    User: text,
+//  });
 
 const User = Record({
   id: text,
@@ -47,14 +53,13 @@ const User = Record({
   email: text,
   paymentMethod: text,
   languageEnrolled: Vec(text),
- // role: Opt(Role),
+  // role: Opt(Role),
 });
 
 const UserPayload = Record({
   name: text,
   email: text,
   paymentMethod: text,
-
 });
 
 const EnrollmentStatus = Variant({
@@ -70,16 +75,16 @@ const Enrollment = Record({
   status: EnrollmentStatus,
 });
 
-const EnrollmentPayload = Record({
-  userId: text,
-  languageId: text,
-});
+// const EnrollmentPayload = Record({
+//   userId: text,
+//   languageId: text,
+// });
 
 const Message = Variant({
   NotFound: text,
   InvalidPayload: text,
-  //PaymentFailed: text,
-  //PaymentCompleted: text,
+  PaymentFailed: text,
+  PaymentCompleted: text,
 });
 
 // Defining Constants and Storage Variables
@@ -125,19 +130,14 @@ export default Canister({
   }),
 
   //delete language
-  deleteLanguage: update(
-    [text],
-    Result(text, Message),
-    (id) => {
-      const language = LanguageStorage.get(id);
-      if ("None" in language) {
-        return Err({ NotFound: `Language with ID ${id} not found` });
-      }
-      LanguageStorage.remove(id); 
-      return Ok(`Language with ID ${id} deleted`);
-     
+  deleteLanguage: update([text], Result(text, Message), (id) => {
+    const language = LanguageStorage.get(id);
+    if ("None" in language) {
+      return Err({ NotFound: `Language with ID ${id} not found` });
     }
-  ),
+    LanguageStorage.remove(id);
+    return Ok(`Language with ID ${id} deleted`);
+  }),
 
   //add user
   addUser: update([UserPayload], Result(User, Message), (payload) => {
@@ -151,7 +151,7 @@ export default Canister({
       id: userId,
       name: payload.name,
       email: payload.email,
-     // role: ,
+      // role: ,
       paymentMethod: payload.paymentMethod,
       languageEnrolled: [],
     };
@@ -194,17 +194,11 @@ export default Canister({
       const language = languageOpt.Some;
       language.students.push(userId);
 
-
-
       UserStorage.insert(userId, user);
       LanguageStorage.insert(languageId, language);
       return Ok(`Enrolled in course ${languageId}`);
       //return user details
       return Ok(user);
-
-      
-
-
     }
   ),
 
@@ -241,7 +235,7 @@ export default Canister({
     });
   }),
 
-  //remove language id from userStorage
+  
   unenrollUser: update(
     [text, text],
     Result(text, Message),
@@ -272,7 +266,6 @@ export default Canister({
     }
   ),
 
-
   //pay for course
   payForCourse: update(
     [text, text],
@@ -293,29 +286,25 @@ export default Canister({
       //user.paymentMethod = paymentMethode
       const language = languageOpt.Some;
       language.students = language.students.filter(
-        (id: string) => id!== userId
+        (id: string) => id !== userId
       );
       UserStorage.insert(userId, user);
       LanguageStorage.insert(languageId, language);
       return Ok(`Paypal Payment Completed`);
     }
   ),
-
-
-
 });
-
 
 // a workaround to make uuid package work with Azle
 globalThis.crypto = {
-    // @ts-ignore
-    getRandomValues: () => {
-        let array = new Uint8Array(32);
+  // @ts-ignore
+  getRandomValues: () => {
+    let array = new Uint8Array(32);
 
-        for (let i = 0; i < array.length; i++) {
-            array[i] = Math.floor(Math.random() * 256);
-        }
-
-        return array;
+    for (let i = 0; i < array.length; i++) {
+      array[i] = Math.floor(Math.random() * 256);
     }
+
+    return array;
+  },
 };
