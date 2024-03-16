@@ -6,28 +6,17 @@ import {
   StableBTreeMap,
   Variant,
   Vec,
-  None,
-  Some,
   Ok,
   Err,
   ic,
-  Principal,
-  Opt,
   nat64,
-  Duration,
-  Result,
-  bool,
   Canister,
 } from "azle";
-import {
-  Ledger,
-  binaryAddressFromAddress,
-  binaryAddressFromPrincipal,
-  hexAddressFromPrincipal,
-} from "azle/canisters/ledger";
-//import { hashCode } from "hashcode";
 import { v4 as uuidv4 } from "uuid";
 
+// Define types
+
+// Define a Language record
 const Language = Record({
   id: text,
   name: text,
@@ -36,38 +25,23 @@ const Language = Record({
   students: Vec(text),
 });
 
-const LanguagePayload = Record({
-  name: text,
-  duration: text,
-  fee: nat64,
-});
-
-//  const Role = Variant({
-//    Admin: text,
-//    User: text,
-//  });
-
+// Define a User record
 const User = Record({
   id: text,
   name: text,
   email: text,
   paymentMethod: text,
   languageEnrolled: Vec(text),
-  // role: Opt(Role),
 });
 
-const UserPayload = Record({
-  name: text,
-  email: text,
-  paymentMethod: text,
-});
-
+// Define an EnrollmentStatus variant
 const EnrollmentStatus = Variant({
   Pending: text,
   Completed: text,
   Failed: text,
 });
 
+// Define an Enrollment record
 const Enrollment = Record({
   id: text,
   userId: text,
@@ -75,11 +49,7 @@ const Enrollment = Record({
   status: EnrollmentStatus,
 });
 
-// const EnrollmentPayload = Record({
-//   userId: text,
-//   languageId: text,
-// });
-
+// Define a Message variant for response messages
 const Message = Variant({
   NotFound: text,
   InvalidPayload: text,
@@ -87,187 +57,141 @@ const Message = Variant({
   PaymentCompleted: text,
 });
 
-// Defining Constants and Storage Variables
+// Define mappings for storage
 const LanguageStorage = StableBTreeMap(0, text, Language);
 const UserStorage = StableBTreeMap(1, text, User);
-const enrollmentStorage = StableBTreeMap(3, text, User);
+const EnrollmentStorage = StableBTreeMap(2, text, Enrollment);
 
 export default Canister({
+  // Query function to get all languages
   getLanguages: query([], Vec(Language), () => {
     return LanguageStorage.values();
   }),
 
+  // Query function to get all users
   getUsers: query([], Vec(User), () => {
     return UserStorage.values();
   }),
 
-  //add language
+  // Update function to add a new language
   addLanguage: update(
-    [LanguagePayload],
+    [Record(Language)],
     Result(Language, Message),
     (payload) => {
-      if (typeof payload !== "object" || Object.keys(payload).length === 0) {
-        return Err({ NotFound: "invalid payoad" });
-      }
-
       const languageId = uuidv4();
-
-      const language = {
-        id: languageId,
-        name: payload.name,
-        duration: payload.duration,
-        fee: payload.fee,
-        students: [],
-      };
-
+      const language = { ...payload, id: languageId, students: [] };
       LanguageStorage.insert(languageId, language);
       return Ok(language);
     }
   ),
 
-  getLanguage: query([text], Opt(Language), (id) => {
+  // Query function to get a language by ID
+  getLanguage: query([text], Language, (id) => {
     return LanguageStorage.get(id);
   }),
 
-  //delete language
-  deleteLanguage: update([text], Result(text, Message), (id) => {
-    const language = LanguageStorage.get(id);
-    if ("None" in language) {
+  // Update function to delete a language by ID
+  deleteLanguage: update([text], text, (id) => {
+    if (!LanguageStorage.contains(id)) {
       return Err({ NotFound: `Language with ID ${id} not found` });
     }
     LanguageStorage.remove(id);
     return Ok(`Language with ID ${id} deleted`);
   }),
 
-  //add user
-  addUser: update([UserPayload], Result(User, Message), (payload) => {
-    if (typeof payload !== "object" || Object.keys(payload).length === 0) {
-      return Err({ NotFound: "invalid payoad" });
-    }
-
+  // Update function to add a new user
+  addUser: update([Record(User)], Result(User, Message), (payload) => {
     const userId = uuidv4();
-
-    const user = {
-      id: userId,
-      name: payload.name,
-      email: payload.email,
-      // role: ,
-      paymentMethod: payload.paymentMethod,
-      languageEnrolled: [],
-    };
-
+    const user = { ...payload, id: userId, languageEnrolled: [] };
     UserStorage.insert(userId, user);
     return Ok(user);
   }),
 
-  getUser: query([text], Opt(User), (id) => {
+  // Query function to get a user by ID
+  getUser: query([text], User, (id) => {
     return UserStorage.get(id);
   }),
 
-  //delete user
-  deleteUser: update([text], Result(text, Message), (id) => {
-    const user = UserStorage.get(id);
-    if ("None" in user) {
+  // Update function to delete a user by ID
+  deleteUser: update([text], text, (id) => {
+    if (!UserStorage.contains(id)) {
       return Err({ NotFound: `User with ID ${id} not found` });
     }
     UserStorage.remove(id);
     return Ok(`User with ID ${id} deleted`);
   }),
 
-  //enroll user and update userStorage adding language id to userStorage
+  // Update function to enroll a user in a language
   enrollUser: update(
     [text, text],
     Result(text, Message),
     (userId, languageId) => {
-      const tUser = ic.caller();
-      const userOpt = UserStorage.get(userId);
+      const user = UserStorage.get(userId);
+      const language = LanguageStorage.get(languageId);
 
-      if ("None" in userOpt) {
-        return Err({ NotFound: `User with ID ${userId} not found` });
+      if (!user || !language) {
+        return Err({ NotFound: "User or language not found" });
       }
-      const languageOpt = LanguageStorage.get(languageId);
-      if ("None" in languageOpt) {
-        return Err({ NotFound: `Language with ID ${languageId} not found` });
-      }
-      const user = userOpt.Some;
+
       user.languageEnrolled.push(languageId);
-      const language = languageOpt.Some;
       language.students.push(userId);
 
       UserStorage.insert(userId, user);
       LanguageStorage.insert(languageId, language);
-      return Ok(`Enrolled in course ${languageId}`);
-      //return user details
-      return Ok(user);
+
+      return Ok(`Enrolled user ${userId} in language ${languageId}`);
     }
   ),
 
-  //get name language user is currently enrolled in
+  // Query function to get languages enrolled by a user
   getEnrolledLanguages: query([text], Vec(text), (userId) => {
-    const userOpt = UserStorage.get(userId);
-    if ("None" in userOpt) {
-      return [];
-    }
-    const user = userOpt.Some;
-    return user.languageEnrolled;
+    const user = UserStorage.get(userId);
+    return user ? user.languageEnrolled : [];
   }),
 
-  //get users enrolled in a language
+  // Query function to get users enrolled in a language
   getEnrolledUsers: query([text], Vec(text), (languageId) => {
-    const languageOpt = LanguageStorage.get(languageId);
-    if ("None" in languageOpt) {
-      return [];
-    }
-    const language = languageOpt.Some;
-    return language.students;
+    const language = LanguageStorage.get(languageId);
+    return language ? language.students : [];
   }),
 
-  //get languages with users enrolled in them and their details
+  // Query function to get languages with users enrolled
   getLanguagesWithUsers: query([], Vec(Language), () => {
     return LanguageStorage.values().map((language) => {
       return {
         ...language,
-        students: language.students.map((userId: any) => {
-          const user = UserStorage.get(userId);
-          return user;
-        }),
+        students: language.students.map((userId) =>
+          UserStorage.get(userId)
+        ),
       };
     });
   }),
 
-  
+  // Update function to unenroll a user from a language
   unenrollUser: update(
     [text, text],
     Result(text, Message),
     (userId, languageId) => {
-      // const tUser = ic.caller();
-      const userOpt = UserStorage.get(userId);
+      const user = UserStorage.get(userId);
+      const language = LanguageStorage.get(languageId);
 
-      if ("None" in userOpt) {
-        return Err({ NotFound: `User with ID ${userId} not found` });
-      }
-      const languageOpt = LanguageStorage.get(languageId);
-      if ("None" in languageOpt) {
-        return Err({ NotFound: `Language with ID ${languageId} not found` });
+      if (!user || !language) {
+        return Err({ NotFound: "User or language not found" });
       }
 
-      const user = userOpt.Some;
       user.languageEnrolled = user.languageEnrolled.filter(
-        (id: string) => id !== languageId
+        (id) => id !== languageId
       );
-      const language = languageOpt.Some;
-      language.students = language.students.filter(
-        (id: string) => id !== userId
-      );
+      language.students = language.students.filter((id) => id !== userId);
 
       UserStorage.insert(userId, user);
       LanguageStorage.insert(languageId, language);
-      return Ok(`User Unenrolled in course ${languageId}`);
+
+      return Ok(`Unenrolled user ${userId} from language ${languageId}`);
     }
   ),
 
-  //pay for course
-  payForCourse: update(
+ payForCourse: update(
     [text, text],
     Result(text, Message),
     (userId, languageId) => {
