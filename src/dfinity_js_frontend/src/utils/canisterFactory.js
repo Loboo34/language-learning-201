@@ -6,8 +6,8 @@ const languageLearning_CANISTER_ID = "be2us-64aaa-aaaaa-qaabq-cai";
 const LEDGER_CANISTER_ID = "ryjl3-tyaaa-aaaaa-aaaba-cai";
 const HOST = "http://localhost:4943";
 
-export async function getlanguageLearningCanisterr() {
-  return await getCanister(languageLearning_CANISTER_ID, languageLearningIDL);
+export async function getLanguageLearningCanisterr() {
+  return await getCanister(LANGUAGELEARNING_CANISTER_ID, languageLearningIDL);
 }
 
 export async function getLedgerCanister() {
