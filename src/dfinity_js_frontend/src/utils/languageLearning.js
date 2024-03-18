@@ -6,23 +6,23 @@ export async function createlanguage(language) {
 }
 
 export async function createUser(user) {
-  return window.canister.languageLearner.addUser(user);
+  return window.canister.languageLearning.addUser(user);
 }
 
 //function to update language
 export async function updateLanguage(language) {
-  return window.canister.languageLearner.updateLanguage(language);
+  return window.canister.languageLearning.updateLanguage(language);
 }
 
 //function to update user
 export async function updateUser(user) {
-  return window.canister.languageLearner.updateUser(user);
+  return window.canister.languageLearning.updateUser(user);
 }
 
 //function to get all languages 
 export async function getAllLanguages() {
   try {
-    return await window.canister.languageLearner.getLanguages();
+    return await window.canister.languageLearning.getLanguages();
   } catch (err) {
     if (err.name === "AgentHTTPResponseError") {
       const authClient = window.auth.client;
@@ -35,7 +35,7 @@ export async function getAllLanguages() {
 //function to get all users 
 export async function getAllUsers() {
   try {
-    return await window.canister.languageLearner.getUsers();
+    return await window.canister.languageLearning.getUsers();
   } catch (err) {
     if (err.name === "AgentHTTPResponseError") {
       const authClient = window.auth.client;
@@ -48,7 +48,7 @@ export async function getAllUsers() {
 //function to get language by id 
 export async function getLanguageById(id) {
   try {
-    return await window.canister.languageLearner.getLanguage(id);
+    return await window.canister.languageLearning.getLanguage(id);
   } catch (err) {
     if (err.name === "AgentHTTPResponseError") {
       const authClient = window.auth.client;
@@ -61,7 +61,7 @@ export async function getLanguageById(id) {
 //function to enroll user in language
 export async function enrollUser(user) {
   try {
-    return await window.canister.languageLearner.enrollUser(user);
+    return await window.canister.languageLearning.enrollUser(user);
   } catch (err) {
     if (err.name === "AgentHTTPResponseError") {
       const authClient = window.auth.client;
@@ -71,27 +71,79 @@ export async function enrollUser(user) {
   }
 }
 
+//get enrolled users
+export async function getEnrolledUsers() {
+  try {
+    return await window.canister.languageLearning.getEnrolledUsers();
+  } catch (err) {
+    if (err.name === "AgentHTTPResponseError") {
+      const authClient = window.auth.client;
+      await authClient.logout();
+    }
+    return [];
+  }
+}
+
+
+
 //delete language by id
 export async function deleteLanguage(id) {
-  return window.canister.languageLearner.deleteLanguage(id);
+  return window.canister.languageLearning.deleteLanguage(id);
 }
 
 //delete user by id
 export async function deleteUser(id) {
-  return window.canister.languageLearner.deleteUser(id);
+  return window.canister.languageLearning.deleteUser(id);
 }
 
 //unenroll
 export async function unenrollUser(id) {
-  return window.canister.languageLearner.unenrollUser(id);
+  return window.canister.languageLearning.unenrollUser(id);
+}
+
+//complete language
+export async function completeLanguage(id) {
+  return window.canister.languageLearning.completeLanguage(id);
+}
+
+//drop language
+export async function dropLanguage(id) {
+  return window.canister.languageLearning.dropLanguage(id);
+}
+
+//get completed language
+export async function getCompletedLanguages() {
+  try {
+    return await window.canister.languageLearning.getCompletedLanguages();
+  } catch (err) {
+    if (err.name === "AgentHTTPResponseError") {
+      const authClient = window.auth.client;
+      await authClient.logout();
+    }
+    return [];
+  }
+}
+
+//get dropped languages
+export async function getDroppedLanguages() {
+  try {
+    return await window.canister.languageLearning.getDroppedLanguages();
+  } catch (err) {
+    if (err.name === "AgentHTTPResponseError") {
+      const authClient = window.auth.client;
+      await authClient.logout();
+    }
+    return [];
+  }
 }
 
 
+
 export async function buyLanguage(event) {
-  const languageLearnerCanister = window.canister.languageLearner;
-  const orderResponse = await languageLearnerCanister.payForCourse(event.id);
+  const languageLearningCanister = window.canister.languageLearning;
+  const orderResponse = await languageLearningCanister.payForCourse(event.id);
   const sellerPrincipal = Principal.from(orderResponse.Ok.seller);
-  const sellerAddress = await languageLearnerCanister.getAddressFromPrincipal(
+  const sellerAddress = await languageLearningCanister.getAddressFromPrincipal(
     sellerPrincipal
   );
   const block = await transferICP(
