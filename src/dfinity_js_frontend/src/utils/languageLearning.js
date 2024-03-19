@@ -20,7 +20,7 @@ export async function updateUser(user) {
 }
 
 //function to get all languages 
-export async function getAllLanguages() {
+export async function getLanguages() {
   try {
     return await window.canister.languageLearning.getLanguages();
   } catch (err) {

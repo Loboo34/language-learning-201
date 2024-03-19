@@ -4,7 +4,7 @@ import { Card, Col, Stack } from "react-bootstrap";
 import UpdateUser from "./UpdateUser";
 
 const User = ({ user, update }) => {
-  const { id, name, email, paymentMethod, languageEnrolled } = user;
+  const { id, name, phone, email, paymentMethod, languageEnrolled } = user;
 
   return (
     <Col key={id}>
@@ -16,8 +16,8 @@ const User = ({ user, update }) => {
           </Stack>
           <Card.Text>Id: {id}</Card.Text>
           <Card.Text className="flex-grow-1 ">Email: {email}</Card.Text>
+          <Card.Text className="flex-grow-1 ">Phone: {phone}</Card.Text>
           <Card.Text className="flex-grow-1 ">paymentMethod: {paymentMethod}</Card.Text>
-         
           <h3>Language</h3>
           {languageEnrolled.map((languageEnrolled, index) => (
             <Card.Text key={index} className="flex-grow-1 ">
@@ -30,8 +30,8 @@ const User = ({ user, update }) => {
   );
 };
 
-User.propTypes = {
-  user: PropTypes.instanceOf(Object).isRequired,
-};
+// User.propTypes = {
+//   user: PropTypes.instanceOf(Object).isRequired,
+// };
 
 export default User;

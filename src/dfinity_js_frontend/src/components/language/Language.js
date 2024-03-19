@@ -26,6 +26,7 @@ const { id, name, duration, fee, students} = language
           <Card.Text className="text-secondary">
             <span>{fee}</span>
           </Card.Text>
+          <Card.Text className="flex-grow-1 ">Students: {students}</Card.Text>
           <Button
             variant="outline-dark"
             onClick={triggerBuy}

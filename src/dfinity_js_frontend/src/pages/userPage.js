@@ -3,8 +3,6 @@ import { Container, Nav } from "react-bootstrap";
 import { login, logout as destroy } from "../utils/auth";
 import Wallet from "../components/Wallet";
 import Users from "../components/user/Users";
-import Cover from "../components/utils/Cover";
-//import coverImg from "../assets/img/cover.jpg";
 import { Notification } from "../components/utils/Notifications";
 
 const UsersPage = () => {
@@ -32,7 +30,18 @@ const UsersPage = () => {
           </main>
         </Container>
       ) : (
-        <Cover name="Street Food" login={login}  />
+        <Container fluid="md">
+          <Nav className="justify-content-end pt-3 pb-5">
+            <Nav.Item>
+              <Wallet
+                principal={principal}
+                symbol={"ICP"}
+                isAuthenticated={isAuthenticated}
+                login={login}
+              />
+            </Nav.Item>
+          </Nav>
+        </Container>
       )}
     </>
   );

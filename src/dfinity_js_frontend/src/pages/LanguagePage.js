@@ -1,16 +1,34 @@
-import React from "react";
-import { Container, Nav } from "react-bootstrap";
-import { login, logout as destroy } from "../utils/auth";
-import Languages from "../components/language/Languages";
+import React, { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Container, Nav, Button, Form, FloatingLabel } from "react-bootstrap";
 import Wallet from "../components/Wallet";
-import Cover from "../components/utils/Cover";
-//import coverImg from "../assets/img/cover.jpg";
+import { login, logout as destroy } from "../utils/auth";
+import { balance as principalBalance } from "../utils/ledger";
 import { Notification } from "../components/utils/Notifications";
+import Cover from "../components/utils/Cover";
+//import Users from "./Users";
 
-const LanguagePage = () => {
+import Languages from "../components/language/Languages";
+
+const LanguagesPage = () => {
   const isAuthenticated = window.auth.isAuthenticated;
 
   const principal = window.auth.principalText;
+
+  const [balance, setBalance] = useState(0);
+
+  const getBalance = useCallback(async () => {
+    try {
+      const balance = await principalBalance();
+      setBalance(balance);
+    } catch (error) {
+      console.log({ error });
+    }
+  }, []);
+
+  useEffect(() => {
+    getBalance();
+  }, [getBalance]);
 
   return (
     <>
@@ -24,6 +42,7 @@ const LanguagePage = () => {
                 symbol={"ICP"}
                 isAuthenticated={isAuthenticated}
                 destroy={destroy}
+                balance={balance}
               />
             </Nav.Item>
           </Nav>
@@ -32,10 +51,10 @@ const LanguagePage = () => {
           </main>
         </Container>
       ) : (
-        <Cover name="Street Food" login={login}  />
+        <Cover name="Street Food" login={login} />
       )}
     </>
   );
 };
 
-export default LanguagePage;
+export default LanguagesPage;

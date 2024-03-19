@@ -7,7 +7,7 @@ import { Row } from "react-bootstrap";
 
 import { NotificationSuccess, NotificationError } from "../utils/Notifications";
 import {
-  getLanguages as getLanguages,
+  getLanguages as getLanguagesList,
   createLanguage,
   buyLanguage,
 } from "../../utils/languageLearning";
@@ -21,7 +21,7 @@ const Languages = () => {
   const getLanguages = useCallback(async () => {
     try {
       setLoading(true);
-      setLanguages(await getLanguages());
+      setLanguages(await getLanguagesList());
     } catch (error) {
       console.log({ error });
     } finally {
@@ -77,7 +77,7 @@ const Languages = () => {
           </div>
           <Row xs={1} sm={2} lg={3} className="g-3  mb-5 g-xl-4 g-xxl-5">
             {languages.map((language, index) => (
-              <Product key={index} Language={language} buy={buy} />
+              <Language key={index} Language={language} buy={buy} />
             ))}
           </Row>
         </>

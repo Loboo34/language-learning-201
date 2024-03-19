@@ -81,7 +81,7 @@ const Users = () => {
           </div>
           <Row xs={1} sm={2} lg={3} className="g-3  mb-5 g-xl-4 g-xxl-5">
             {users.map((_user, index) => (
-              <User
+              <Users
                 key={index}
                 user={{
                   ..._user,
