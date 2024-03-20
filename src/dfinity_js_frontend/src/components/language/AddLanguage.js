@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 import { Button, Modal, Form, FloatingLabel } from "react-bootstrap";
 
 
-const AddLanguage = ({ save }) => {
+const AddLanguage = () => {
 const [name, setName] = useState("");
 const [durations, setDuration] = useState("");
 const [fee, setFee] = useState(0);
-const [students, setStudents] = useState(0);
+//const [students, setStudents] = useState(0);
 
 const isFormFilled = () => name && durations && fee;
 
@@ -24,7 +24,7 @@ const [show, setShow] = useState(false);
         className="rounded-pill px-0"
         style={{ width: "38px" }}
      >
-        <i class="bi bi-plus"></i>
+        <i className="bi bi-plus"></i>
      </Button>
      <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
@@ -76,7 +76,7 @@ const [show, setShow] = useState(false);
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-            <Button
+             <Button
               variant="primary"
               onClick={() => {
                 if (isFormFilled()) {
@@ -86,7 +86,7 @@ const [show, setShow] = useState(false);
               }}
             >
               Save
-            </Button>
+            </Button> 
           </Modal.Footer>
         </Form>
         </Modal>
@@ -95,8 +95,8 @@ const [show, setShow] = useState(false);
   )
 }
 
-AddLanguage.propTypes = {
-  save: PropTypes.func.isRequired,
+ AddLanguage.propTypes = {
+   save: PropTypes.func.isRequired,
 };
 
 export default AddLanguage

@@ -1,91 +1,69 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
-import AddLanguage from "./AddLanguage";
-import Language from "./Language";
 import Loader from "../utils/Loader";
 import { Row } from "react-bootstrap";
-
+//import { Link } from "react-router-dom";
 import { NotificationSuccess, NotificationError } from "../utils/Notifications";
+import Language from "./Language";
+
 import {
-  getLanguages as getLanguagesList,
-  createLanguage,
-  buyLanguage,
+  createlanguage,
+  updateLanguage,
+  getLanguages as getLanguageList,
 } from "../../utils/languageLearning";
-//import AddLanguage from "./AddLanguage";  
 
 const Languages = () => {
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // function to get the list of languages
   const getLanguages = useCallback(async () => {
-    try {
-      setLoading(true);
-      setLanguages(await getLanguagesList());
-    } catch (error) {
-      console.log({ error });
-    } finally {
-      setLoading(false);
-    }
-  });
-
-  const addLanguage = async (data) => {
-    try {
-      setLoading(true);
-      const priceStr = data.price;
-      data.price = parseInt(priceStr, 10) * 10 ** 8;
-      createLanguage(data).then(() => {
-        getLanguages();
-      });
-      toast(<NotificationSuccess text="Language added successfully." />);
-    } catch (error) {
-      console.log({ error });
-      toast(<NotificationError text="Failed to create a language." />);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  //  function to initiate transaction
-  const buy = async (id) => {
-    try {
-      setLoading(true);
-      await buyLanguage({
-        id,
-      }).then((resp) => {
-        getLanguages();
-        toast(<NotificationSuccess text="Language bought successfully" />);
-      });
-    } catch (error) {
-      toast(<NotificationError text="Failed to purchase language." />);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setLoading(true);
+    const languageList = await getLanguageList();
+    setLanguages(languageList);
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     getLanguages();
-  }, []);
+  }, [getLanguages]);
 
-  return (
-    <>
-      {!loading ? (
-        <>
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <h1 className="fs-4 fw-bold mb-0">Hello</h1>
-            <AddLanguage save={addLanguage} />
-          </div>
-          <Row xs={1} sm={2} lg={3} className="g-3  mb-5 g-xl-4 g-xxl-5">
-            {languages.map((_language, index) => (
-              <Language key={index} language={{ ..._language,}}/>
-            ))}
-          </Row>
-        </>
-      ) : (
-        <Loader />
-      )}
-    </>
-  );
+  const createLanguage = async (language) => {
+    setLoading(true);
+    try {
+      await createlanguage(language);
+      toast.success("Language created successfully");
+      getLanguages();
+    } catch (error) {
+      toast.error("Error creating language");
+    }
+    setLoading(false);
+  }
+
+  const updateLanguageData = async (language) => {
+    setLoading(true);
+    try {
+      await updateLanguage(language);
+      toast.success("Language updated successfully");
+      getLanguages();
+    } catch (error) {
+      toast.error("Error updating language");
+    }
+    setLoading(false);
+  }
+
+
+  return(
+    <div>
+      <NotificationSuccess />
+      <NotificationError />
+      <Loader loading={loading} />
+      <Row>
+        {languages.map((language) => (
+          <Language key={language.id} language={language} updateLanguage={updateLanguageData} />
+        ))}
+      </Row>
+    </div>
+  )
 };
 
 export default Languages;

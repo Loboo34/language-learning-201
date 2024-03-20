@@ -1,20 +1,63 @@
 import React, { useEffect, useCallback, useState } from "react";
+import { Container, Nav, Cover } from "react-bootstrap";
+import Languages from "./components/language/Languages";
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-
-import UsersPage from "./pages/LanguagePage";
-import LanguagePage from "./pages/LanguagePage";
+//import Wallet from "./components/Wallet";
+import coverImg from "./assets/img/sandwich.jpg";
+import { login, logout as destroy } from "./utils/auth";
+import { balance as principalBalance } from "./utils/ledger";
+//import Cover from "./components/utils/Cover";
+import { Notification } from "./components/utils/Notifications";
+import LanguagesPage from "./pages/LanguagePage";
 
 const App = function AppWrapper() {
+  const isAuthenticated = window.auth.isAuthenticated;
+  const principal = window.auth.principalText;
+
+  const [balance, setBalance] = useState("0");
+
+  const getBalance = useCallback(async () => {
+    if (isAuthenticated) {
+      setBalance(await principalBalance());
+    }
+  });
+
+  useEffect(() => {
+    getBalance();
+  }, [getBalance]);
+
+  // return (
+  //   <>
+  //     <Notification />
+  //     {isAuthenticated ? (
+  //       <Container fluid="md">
+  //         <Nav className="justify-content-end pt-3 pb-5">
+  //           <Nav.Item>
+  //             <Wallet
+  //               principal={principal}
+  //               balance={balance}
+  //               symbol={"ICP"}
+  //               isAuthenticated={isAuthenticated}
+  //               destroy={destroy}
+  //             />
+  //           </Nav.Item>
+  //         </Nav>
+  //         <main>
+  //           {/* <Languages /> */}
+  //           hello
+  //         </main>
+  //       </Container>
+  //     ) : (
+  //       <Cover name="Street Food" login={login}  />
+  //     )}
+  //   </>
+  // );
+
   return (
-    <Router>
-      <Routes>
-        <Route exact path="/" element={<LanguagePage />} />
-        {/* <Route path="/users" element={<UsersPage/>} /> */}
-        
-      </Routes>
-    </Router>
-  );
+    <div>
+   <LanguagesPage />
+    </div>
+  )
 };
 
 export default App;

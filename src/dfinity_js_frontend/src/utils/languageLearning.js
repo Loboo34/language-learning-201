@@ -151,7 +151,7 @@ export async function buyLanguage(language) {
     orderResponse.Ok.price,
     orderResponse.Ok.memo
   );
-  await eventManagerCanister.completePurchase(
+  await languageLearningCanister.completePurchase(
     sellerPrincipal,
     language.id,
     orderResponse.Ok.price,

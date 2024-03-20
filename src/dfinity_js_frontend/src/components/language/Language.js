@@ -5,13 +5,12 @@ import { Principal } from "@dfinity/principal";
 import { Link } from "react-router-dom";
 
 
-const Language = ({ language }) => {
+const Language = ({  }) => {
 const {
   id,
   name,
   duration,
   students,
-  teacher
 } = language
 
 const handleEnroll = (userId) => {

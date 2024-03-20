@@ -5,24 +5,19 @@ import Wallet from "../components/Wallet";
 import { login, logout as destroy } from "../utils/auth";
 import { balance as principalBalance } from "../utils/ledger";
 import { Notification } from "../components/utils/Notifications";
-import Cover from "../components/utils/Cover";
-//import Users from "./Users";
-
 import Languages from "../components/language/Languages";
 
 const LanguagesPage = () => {
   const isAuthenticated = window.auth.isAuthenticated;
-
   const principal = window.auth.principalText;
 
+  const [balance, setBalance] = useState("0");
+
   const getBalance = useCallback(async () => {
-    try {
-      const balance = await principalBalance();
-      setBalance(balance);
-    } catch (error) {
-      console.log({ error });
+    if (isAuthenticated) {
+      setBalance(await principalBalance());
     }
-  }, []);
+  });
 
   useEffect(() => {
     getBalance();
@@ -30,17 +25,16 @@ const LanguagesPage = () => {
 
   return (
     <>
-      <Notification />
       {isAuthenticated ? (
         <Container fluid="md">
           <Nav className="justify-content-end pt-3 pb-5">
             <Nav.Item>
               <Wallet
                 principal={principal}
+                balance={balance}
                 symbol={"ICP"}
                 isAuthenticated={isAuthenticated}
                 destroy={destroy}
-                balance={balance}
               />
             </Nav.Item>
           </Nav>
@@ -49,10 +43,23 @@ const LanguagesPage = () => {
           </main>
         </Container>
       ) : (
-        <Cover name="Street Food" login={login} />
+        <div>
+          <Notification />
+          <Container>
+            <div className="text-center">
+              <h1>Welcome to the Language Learning Platform</h1>
+              <p>
+                Please login to continue
+              </p>
+              <Button variant="primary" onClick={login}>
+                Login
+              </Button>
+            </div>
+          </Container>
+        </div>
       )}
     </>
   );
-};
-
+}
 export default LanguagesPage;
+
