@@ -11,7 +11,7 @@ import {
   createLanguage,
   buyLanguage,
 } from "../../utils/languageLearning";
-//import AddLanguage from "./AddLanguage";
+//import AddLanguage from "./AddLanguage";  
 
 const Languages = () => {
   const [languages, setLanguages] = useState([]);
@@ -34,7 +34,7 @@ const Languages = () => {
       setLoading(true);
       const priceStr = data.price;
       data.price = parseInt(priceStr, 10) * 10 ** 8;
-      createLanguage(data).then((resp) => {
+      createLanguage(data).then(() => {
         getLanguages();
       });
       toast(<NotificationSuccess text="Language added successfully." />);
@@ -72,12 +72,12 @@ const Languages = () => {
       {!loading ? (
         <>
           <div className="d-flex justify-content-between align-items-center mb-4">
-            <h1 className="fs-4 fw-bold mb-0">Street Food</h1>
+            <h1 className="fs-4 fw-bold mb-0">Hello</h1>
             <AddLanguage save={addLanguage} />
           </div>
           <Row xs={1} sm={2} lg={3} className="g-3  mb-5 g-xl-4 g-xxl-5">
-            {languages.map((language, index) => (
-              <Language key={index} Language={language} buy={buy} />
+            {languages.map((_language, index) => (
+              <Language key={index} language={{ ..._language,}}/>
             ))}
           </Row>
         </>

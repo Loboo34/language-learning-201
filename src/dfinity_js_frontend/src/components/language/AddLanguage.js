@@ -7,6 +7,7 @@ const AddLanguage = ({ save }) => {
 const [name, setName] = useState("");
 const [durations, setDuration] = useState("");
 const [fee, setFee] = useState(0);
+const [students, setStudents] = useState(0);
 
 const isFormFilled = () => name && durations && fee;
 

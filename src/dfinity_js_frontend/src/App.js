@@ -10,7 +10,7 @@ const App = function AppWrapper() {
     <Router>
       <Routes>
         <Route exact path="/" element={<LanguagePage />} />
-        <Route path="/users" element={<UsersPage/>} />
+        {/* <Route path="/users" element={<UsersPage/>} /> */}
         
       </Routes>
     </Router>

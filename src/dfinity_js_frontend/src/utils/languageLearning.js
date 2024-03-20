@@ -33,7 +33,7 @@ export async function getLanguages() {
 }
 
 //function to get all users 
-export async function getAllUsers() {
+export async function getUsers() {
   try {
     return await window.canister.languageLearning.getUsers();
   } catch (err) {
@@ -46,9 +46,9 @@ export async function getAllUsers() {
 }
 
 //function to get language by id 
-export async function getLanguageById(id) {
+export async function getLanguage(languageId) {
   try {
-    return await window.canister.languageLearning.getLanguage(id);
+    return await window.canister.languageLearning.getLanguage(languageId);
   } catch (err) {
     if (err.name === "AgentHTTPResponseError") {
       const authClient = window.auth.client;
@@ -86,14 +86,14 @@ export async function getEnrolledUsers() {
 
 
 
-//delete language by id
-export async function deleteLanguage(id) {
-  return window.canister.languageLearning.deleteLanguage(id);
+//delete language by languageId
+export async function deleteLanguage(languageId) {
+  return window.canister.languageLearning.deleteLanguage(languageId);
 }
 
-//delete user by id
-export async function deleteUser(id) {
-  return window.canister.languageLearning.deleteUser(id);
+//delete user by languageId
+export async function deleteUser(languageId) {
+  return window.canister.languageLearning.deleteUser(languageId);
 }
 
 //unenroll
@@ -102,13 +102,13 @@ export async function unenrollUser(id) {
 }
 
 //complete language
-export async function completeLanguage(id) {
-  return window.canister.languageLearning.completeLanguage(id);
+export async function completeLanguage(languageId) {
+  return window.canister.languageLearning.completeLanguage(languageId);
 }
 
 //drop language
-export async function dropLanguage(id) {
-  return window.canister.languageLearning.dropLanguage(id);
+export async function dropLanguage(languageId) {
+  return window.canister.languageLearning.dropLanguage(languageId);
 }
 
 //get completed language
@@ -139,9 +139,9 @@ export async function getDroppedLanguages() {
 
 
 
-export async function buyLanguage(event) {
+export async function buyLanguage(language) {
   const languageLearningCanister = window.canister.languageLearning;
-  const orderResponse = await languageLearningCanister.payForCourse(event.id);
+  const orderResponse = await languageLearningCanister.payForCourse(language.id);
   const sellerPrincipal = Principal.from(orderResponse.Ok.seller);
   const sellerAddress = await languageLearningCanister.getAddressFromPrincipal(
     sellerPrincipal
