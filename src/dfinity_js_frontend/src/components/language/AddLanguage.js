@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Button, Modal, Form, FloatingLabel } from "react-bootstrap";
 
 
-const AddLanguage = () => {
+const AddLanguage = ({save}) => {
 const [name, setName] = useState("");
 const [durations, setDuration] = useState("");
 const [fee, setFee] = useState(0);

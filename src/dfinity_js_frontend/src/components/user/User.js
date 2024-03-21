@@ -30,8 +30,8 @@ const User = ({ user, update }) => {
   );
 };
 
-// User.propTypes = {
-//   user: PropTypes.instanceOf(Object).isRequired,
-// };
+ User.propTypes = {
+   user: PropTypes.instanceOf(Object).isRequired,
+ };
 
 export default User;

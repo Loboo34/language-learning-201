@@ -72,7 +72,7 @@ const Users = () => {
               to="/"
               className="justify-content-start mr-4 py-2 px-3 my-2 bg-secondary text-white rounded-pill "
             >
-              Events Page
+              Languages Page
             </Link>
             <div className="d-flex align-items-center">
               <div className="mr-8">Add User</div>
