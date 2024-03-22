@@ -43,20 +43,20 @@ const Users = () => {
     }
   };
 
-  const update = async (data) => {
-    try {
-      setLoading(true);
-      updateUser(data).then((resp) => {
-        getUsers();
-      });
-      toast(<NotificationSuccess text="User added successfully." />);
-    } catch (error) {
-      console.log({ error });
-      toast(<NotificationError text="Failed to create a user." />);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const update = async (data) => {
+  //   try {
+  //     setLoading(true);
+  //     updateUser(data).then((resp) => {
+  //       getUsers();
+  //     });
+  //     toast(<NotificationSuccess text="User added successfully." />);
+  //   } catch (error) {
+  //     console.log({ error });
+  //     toast(<NotificationError text="Failed to create a user." />);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
     getUsers();
@@ -74,22 +74,21 @@ const Users = () => {
             >
               Languages Page
             </Link>
-            <div className="d-flex align-items-center">
-              <div className="mr-8">Add User</div>
-              <AddUser save={addUser} />
-            </div>
           </div>
           <Row xs={1} sm={2} lg={3} className="g-3  mb-5 g-xl-4 g-xxl-5">
             {users.map((_user, index) => (
-              <Users
+              <User
                 key={index}
                 user={{
                   ..._user,
                 }}
-                update={update}
+                //update={update}
               />
             ))}
           </Row>
+          <div className="d-flex align-items-center">
+            <AddUser save={addUser} />
+          </div>
         </>
       ) : (
         <Loader />

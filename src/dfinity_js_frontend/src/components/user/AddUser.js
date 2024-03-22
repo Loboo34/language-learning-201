@@ -6,9 +6,10 @@ const AddUser = ({ save }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
- // const [languageEnrolled, setLanguageEnrolled] = useState("");
+  const [phoneNo, setPhoneNo] = useState("");
+  // const [languageEnrolled, setLanguageEnrolled] = useState("");
 
-  const isFormFilled = () => name && email && paymentMethod;
+  const isFormFilled = () => name && email && phoneNo && paymentMethod;
 
   const [show, setShow] = useState(false);
 
@@ -20,10 +21,11 @@ const AddUser = ({ save }) => {
       <Button
         onClick={handleShow}
         variant="dark"
-        className="rounded-pill px-0"
-        style={{ width: "38px" }}
+        className="d-flex"
+        //style={{ width: "38px" }}
       >
         <i className="bi bi-plus"></i>
+        <span className="fs-6">ADD user</span>
       </Button>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
@@ -59,19 +61,35 @@ const AddUser = ({ save }) => {
               />
             </FloatingLabel>
             <FloatingLabel
-              controlId="inputPaymentMethod"
-              label="Payment Method"
+              controlId="inputPhoneNumber"
+              label="Phone Number"
               className="mb-3"
             >
               <Form.Control
                 type="text"
-                placeholder="Payment Method"
+                placeholder="Phone Number"
+                value={phoneNo}
                 onChange={(e) => {
-                  setPhone(e.target.value);
+                  setPhoneNo(e.target.value);
                 }}
               />
             </FloatingLabel>
-
+            <FloatingLabel
+              controlId="selectPaymentMethod"
+              label="Payment Method"
+              className="mb-3"
+            >
+              <Form.Select
+                value={paymentMethod}
+                onChange={(e) => {
+                  setPaymentMethod(e.target.value);
+                }}
+              >
+                <option value="">Select Payment Method</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="PayPal">PayPal</option>
+              </Form.Select>
+            </FloatingLabel>
           </Modal.Body>
         </Form>
         <Modal.Footer>
@@ -82,12 +100,15 @@ const AddUser = ({ save }) => {
             variant="dark"
             disabled={!isFormFilled()}
             onClick={() => {
-              save({
-                name,
-                email,
-                paymentMethod,
-              });
-              handleClose();
+              if (isFormFilled()) {
+                save({
+                  name,
+                  email,
+                  phoneNo,
+                  paymentMethod,
+                });
+                handleClose();
+              }
             }}
           >
             Save user

@@ -32,7 +32,7 @@ const Language = Record({
   id: text,
   name: text,
   duration: text,
-  fee: nat64,
+  fee: text,
   students: Vec(text),
   teacher: Principal
 });
@@ -40,7 +40,7 @@ const Language = Record({
 const LanguagePayload = Record({
   name: text,
   duration: text,
-  fee: nat64,
+  fee: text,
 });
 
 const EnrollmentStatus = Variant({
@@ -59,7 +59,7 @@ const LessonStatus = Variant({
 const User = Record({
   id: text,
   name: text,
-  phoneNo: nat64,
+  phoneNo: text,
   email: text,
   paymentMethod: text,
   languageEnrolled: Vec(text),
@@ -71,7 +71,7 @@ const User = Record({
 const UserPayload = Record({
   name: text,
   email: text,
-  phoneNo: nat64,
+  phoneNo: text,
   paymentMethod: text,
 });
 
@@ -127,6 +127,7 @@ export default Canister({
     return languageStorage.get(id);
   }),
 
+
   //delete language
   deleteLanguage: update([text], Result(text, Message), (id) => {
     const language = languageStorage.get(id);
@@ -157,6 +158,17 @@ export default Canister({
 
   getUser: query([text], Opt(User), (id) => {
     return userStorage.get(id);
+  }),
+
+  //update user
+  updateUser: update([text, UserPayload], Result(User, Message), (id, payload) => {
+    const userOpt = userStorage.get(id);
+    if ("None" in userOpt) {
+      return Err({ NotFound: `User with ID ${id} not found` });
+    }
+    const user = userOpt.Some;
+    userStorage.insert(id, { ...user, ...payload });
+    return Ok(user);
   }),
 
   //delete user

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 import Loader from "../utils/Loader";
 import { Row } from "react-bootstrap";
-//import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { NotificationSuccess, NotificationError } from "../utils/Notifications";
 
 import {
@@ -11,6 +11,7 @@ import {
   getLanguages as getLanguageList,
 } from "../../utils/languageLearning";
 import Language from "./Language";
+import AddLanguage from "./AddLanguage";
 
 const Languages = () => {
   const [languages, setLanguages] = useState([]);
@@ -27,55 +28,52 @@ const Languages = () => {
     }
   });
 
+  const addLanguage = async (language) => {
+    try {
+      setLoading(true);
+      createlanguage(language).then((res) => {
+        getLanguages();
+      });
+      toast.success("Language created successfully");
+    } catch (error) {
+      console.log({ error });
+      toast(<NotificationError text="Failed to create language." />);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  const update = async (data) => {
+    try {
+      setLoading(true);
+      updateLanguage(data).then((resp) => {
+        getLanguages();
+        toast(<NotificationSuccess text="Language Added." />);
+      });
+    } catch (error) {
+      console.log({ error });
+      toast(<NotificationError text="Failed to add language." />);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     getLanguages();
   }, []);
 
-  // const createLanguage = async (language) => {
-  //   setLoading(true);
-  //   try {
-  //     await createlanguage(language);
-  //     toast.success("Language created successfully");
-  //     getLanguages();
-  //   } catch (error) {
-  //     toast.error("Error creating language");
-  //   }
-  //   setLoading(false);
-  // }
-  // const updateLanguage = async (data) => {
-  //     try {
-  //       setLoading(true);
-  //       const maxSlotsStr = data.maxSlots;
-  //       data.maxSlots = parseInt(maxSlotsStr, 10) * 10 ** 8;
-  //       updateLanguage(data).then((resp) => {
-  //         getLanguages();
-  //         toast(<NotificationSuccess text="Language Added." />);
-  //       });
-  //     } catch (error) {
-  //       console.log({ error });
-  //       toast(<NotificationError text="Failed to add language." />);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
   return (
     <>
       {!loading ? (
         <>
-          <div className="">
-            <h1 className="">Languages</h1>
-            {/* <Link
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h1 className="fs-4 fw-bold mb-0">Language</h1>
+            <Link
               to="/users"
-              className="justify-content-start py-2 px-3 my-2 bg-secondary text-white rounded-pill "
+              className="justify-content-start mr-4 py-2 px-3 my-2 bg-secondary text-white rounded-pill "
             >
-              Users
-            </Link> */}
-            <div className="">
-              <div className="mr-6">Add Language</div>
-            </div>
+              Users Page
+            </Link>
           </div>
           <Row xs={1} sm={2} lg={3} className="">
             {languages.map((_language, index) => (
@@ -84,11 +82,14 @@ const Languages = () => {
                 language={{
                   ..._language,
                 }}
-
-                //updateLanguage={updateLanguage}
+                update={update}
               />
             ))}
           </Row>
+          <div className="aling-items-center">
+            {/* <div className="">Add Language</div> */}
+            <AddLanguage save={addLanguage} />
+          </div>
         </>
       ) : (
         <Loader />

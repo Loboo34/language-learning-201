@@ -15,32 +15,13 @@ const UsersPage = () => {
       <Notification />
       {isAuthenticated ? (
         <Container fluid="md">
-          <Nav className="justify-content-end pt-3 pb-5">
-            <Nav.Item>
-              <Wallet
-                principal={principal}
-                symbol={"ICP"}
-                isAuthenticated={isAuthenticated}
-                destroy={destroy}
-              />
-            </Nav.Item>
-          </Nav>
           <main>
             <Users />
           </main>
         </Container>
       ) : (
         <Container fluid="md">
-          <Nav className="justify-content-end pt-3 pb-5">
-            <Nav.Item>
-              <Wallet
-                principal={principal}
-                symbol={"ICP"}
-                isAuthenticated={isAuthenticated}
-                login={login}
-              />
-            </Nav.Item>
-          </Nav>
+          <Nav className="justify-content-end pt-3 pb-5">Hello</Nav>
         </Container>
       )}
     </>

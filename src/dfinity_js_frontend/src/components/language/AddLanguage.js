@@ -2,31 +2,30 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Button, Modal, Form, FloatingLabel } from "react-bootstrap";
 
+const AddLanguage = ({ save }) => {
+  const [name, setName] = useState("");
+  const [duration, setDuration] = useState("");
+  const [fee, setFee] = useState(0);
 
-const AddLanguage = ({save}) => {
-const [name, setName] = useState("");
-const [durations, setDuration] = useState("");
-const [fee, setFee] = useState(0);
-//const [students, setStudents] = useState(0);
+  const isFormFilled = () => name && duration && fee;
 
-const isFormFilled = () => name && durations && fee;
-
-const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   return (
     <>
-     <Button
-     onClick={handleShow}
-     variant="dark"
-        className="rounded-pill px-0"
-        style={{ width: "38px" }}
-     >
+      <Button
+        onClick={handleShow}
+        variant="dark"
+        className="d-flex "
+        //style={{ width: "120px" }}
+      >
         <i className="bi bi-plus"></i>
-     </Button>
-     <Modal show={show} onHide={handleClose} centered>
+        <span className=" fs-6"> Add Language</span>
+      </Button>
+      <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>New Language</Modal.Title>
         </Modal.Header>
@@ -46,7 +45,7 @@ const [show, setShow] = useState(false);
               />
             </FloatingLabel>
             <FloatingLabel
-              controlId="inputDurations"
+              controlId="inputDuration"
               label="Duration"
               className="mb-3"
             >
@@ -58,13 +57,9 @@ const [show, setShow] = useState(false);
                 }}
               />
             </FloatingLabel>
-            <FloatingLabel
-              controlId="inputFee"
-              label="Fee"
-              className="mb-3"
-            >
+            <FloatingLabel controlId="inputFee" label="Fee" className="mb-3">
               <Form.Control
-                type="number"
+                type="text"
                 placeholder="Fee"
                 onChange={(e) => {
                   setFee(e.target.value);
@@ -76,27 +71,26 @@ const [show, setShow] = useState(false);
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-             <Button
+            <Button
               variant="primary"
               onClick={() => {
                 if (isFormFilled()) {
-                  save({ name, durations, fee });
+                  save({ name, duration, fee });
                   handleClose();
                 }
               }}
             >
               Save
-            </Button> 
+            </Button>
           </Modal.Footer>
         </Form>
-        </Modal>
-
-        </>
-  )
-}
-
- AddLanguage.propTypes = {
-   save: PropTypes.func.isRequired,
+      </Modal>
+    </>
+  );
 };
 
-export default AddLanguage
+AddLanguage.propTypes = {
+  save: PropTypes.func.isRequired,
+};
+
+export default AddLanguage;

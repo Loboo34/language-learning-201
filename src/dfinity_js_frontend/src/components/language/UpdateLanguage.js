@@ -2,21 +2,25 @@ import React, { useState } from "react";
 import { Button, Modal, Form, FloatingLabel, Stack } from "react-bootstrap";
 
 const UpdateLanguage = ({ language, save }) => {
-  const [show, setShow] = useState(false);
-  const [name, setName] = useState(language.name);
-  const [duration, setDuration] = useState(language.duration);
-  const [fee, setFee] = useState(language.fee);
+  // Check if language is defined, otherwise provide default values
+  const initialDuration = language ? language.duration : "";
+  const initialFee = language ? language.fee : "";
+
+  const [duration, setDuration] = useState(initialDuration);
+  const [fee, setFee] = useState(initialFee);
+
+  const isFormFilled = () => duration && fee;
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const isFormFilled = () => name && duration && fee;
+  const [show, setShow] = useState(false);
 
   return (
     <>
       <Button
         onClick={handleShow}
-        variant="dark"
+        variant=""
         className="rounded-pill px-0"
         style={{ width: "38px" }}
       >
@@ -30,28 +34,14 @@ const UpdateLanguage = ({ language, save }) => {
           <Modal.Body>
             <Stack gap={3}>
               <FloatingLabel
-                controlId="inputName"
-                label="Language name"
-                className="mb-3"
-              >
-                <Form.Control
-                  type="text"
-                  value={name}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                  }}
-                  placeholder="Enter name of language"
-                />
-              </FloatingLabel>
-              <FloatingLabel
                 controlId="inputDurations"
                 label="Duration"
                 className="mb-3"
               >
                 <Form.Control
                   type="text"
-                  value={duration}
                   placeholder="Duration"
+                  value={duration}
                   onChange={(e) => {
                     setDuration(e.target.value);
                   }}
@@ -59,9 +49,9 @@ const UpdateLanguage = ({ language, save }) => {
               </FloatingLabel>
               <FloatingLabel controlId="inputFee" label="Fee" className="mb-3">
                 <Form.Control
-                  type="number"
-                  value={fee}
+                  type="text"
                   placeholder="Fee"
+                  value={fee}
                   onChange={(e) => {
                     setFee(e.target.value);
                   }}
@@ -76,7 +66,7 @@ const UpdateLanguage = ({ language, save }) => {
             <Button
               variant="primary"
               onClick={() => {
-                save({ name, duration, fee });
+                save({ id: language.id, duration, fee });
                 handleClose();
               }}
               disabled={!isFormFilled()}

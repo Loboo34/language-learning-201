@@ -15,17 +15,6 @@ const LanguagesPage = () => {
     <>
       {isAuthenticated ? (
         <Container fluid="md">
-          <Nav className="justify-content-end pt-3 pb-5">
-            <Nav.Item>
-              <Wallet
-                principal={principal}
-                // balance={balance}
-                symbol={"ICP"}
-                isAuthenticated={isAuthenticated}
-                destroy={destroy}
-              />
-            </Nav.Item>
-          </Nav>
           <main>
             <Languages />
           </main>
@@ -36,7 +25,7 @@ const LanguagesPage = () => {
           <Container>
             <div className="text-center">
               <h1>Welcome to the Language Learning Platform</h1>
-              <p>Please login to continue</p>
+              <span>Please login to continue</span>
               <Button variant="primary" onClick={login}>
                 Login
               </Button>

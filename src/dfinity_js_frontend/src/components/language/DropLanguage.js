@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Button, Modal, Form, FloatingLabel } from "react-bootstrap";
+import { dropLanguage } from "../../utils/languageLearning";
 
 const DropLanguage = ({ show, languageId, save }) => {
   const [show, setShow] = useState(false);
