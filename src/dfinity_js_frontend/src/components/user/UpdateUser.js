@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Button, Modal, Form, Stack, FloatingLabel } from "react-bootstrap";
 
-const AddUser = ({ user, save }) => {
-  //const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("");
+const UpdateUser = ({ user, save }) => {
+  const [email, setEmail] = useState(user.email);
+  const [phoneNo, setPhoneNo] = useState(user.phoneNo);
+  const [paymentMethod, setPaymentMethod] = useState(user.paymentMethod);
 
-  const isFormFilled = () => email && paymentMethod;
+  const isFormFilled = () => email && phoneNo && paymentMethod;
 
   const [show, setShow] = useState(false);
 
@@ -21,13 +21,12 @@ const AddUser = ({ user, save }) => {
         className="rounded-pill"
         // style={{ width: "38px" }}
       >
-        Update <i className="bi bi-pencil-square"></i>
+        <i className="bi bi-pencil-square"></i>
       </Button>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Stack>
             <Modal.Title>Update User</Modal.Title>
-           
           </Stack>
         </Modal.Header>
         <Form>
@@ -41,25 +40,37 @@ const AddUser = ({ user, save }) => {
                 type="text"
                 placeholder="email"
                 onChange={(e) => {
-                  setPhone(e.target.value);
+                  setEmail(e.target.value);
                 }}
               />
             </FloatingLabel>
 
             <FloatingLabel
-              controlId="inputPaymentMethod"
-              label="Payment Method"
+              controlId="inputPhoneNo"
+              label="Phone Number"
               className="mb-3"
             >
               <Form.Control
                 type="text"
-                placeholder="payment method"
+                placeholder="Phone Number"
                 onChange={(e) => {
-                  setAddress(e.target.value);
+                  setPhoneNo(e.target.value);
                 }}
               />
             </FloatingLabel>
-           
+            <FloatingLabel
+              controlId="inputPaymentMethode"
+              label="Payment Methode"
+              className="mb-3"
+            >
+              <Form.Control
+                type="text"
+                placeholder="Payment Methode"
+                onChange={(e) => {
+                  setPaymentMethod(e.target.value);
+                }}
+              />
+            </FloatingLabel>
           </Modal.Body>
         </Form>
         <Modal.Footer>
@@ -73,6 +84,7 @@ const AddUser = ({ user, save }) => {
               save({
                 id: user.id,
                 email,
+                phoneNo,
                 paymentMethod,
               });
               handleClose();
@@ -86,4 +98,4 @@ const AddUser = ({ user, save }) => {
   );
 };
 
-export default AddUser;
+export default UpdateUser;

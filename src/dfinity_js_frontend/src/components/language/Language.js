@@ -6,12 +6,8 @@ import { Link } from "react-router-dom";
 import UpdateLanguage from "./UpdateLanguage";
 import Enroll from "./Enroll";
 
-const Language = ({ language, update, enroll }) => {
-  const { id, name, duration, fee, students } = language;
-
-  const handleEnroll = (userId) => {
-    enroll({ languageId: id, userId });
-  };
+const Language = ({ language, update }) => {
+  const { id, name, duration, fee } = language;
 
   return (
     <Col md={4} className="mb-4">
@@ -22,17 +18,13 @@ const Language = ({ language, update, enroll }) => {
           </div>
           <Card.Text>
             <Card.Title>{name}</Card.Title>
+            <Badge>{id}</Badge>
             <Stack direction="horizontal" gap={3}>
               <Badge>Duration: {duration}</Badge>
               <Badge>Fee: {fee}</Badge>
-              <Badge>{students}</Badge>
             </Stack>
+            <Badge>{students}</Badge>
           </Card.Text>
-          {/* <Link to={`/language/${language.id}`} className="btn btn-primary">
-            View
-          </Link> */}
-
-          <Enroll enroll={handleEnroll} />
         </Card.Body>
       </Card>
     </Col>
@@ -41,7 +33,6 @@ const Language = ({ language, update, enroll }) => {
 
 Language.propTypes = {
   language: PropTypes.object.isRequired,
-  // enroll: PropTypes.func.isRequired
 };
 
 export default Language;

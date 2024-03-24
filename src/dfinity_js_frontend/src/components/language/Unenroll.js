@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Button, Modal, Form, FloatingLabel } from "react-bootstrap";
 
-const Enroll = ({ save }) => {
+const Unenroll = ({ save }) => {
   const [userId, setUserId] = useState("");
   const [languageId, setLanguageId] = useState("");
 
@@ -16,11 +16,11 @@ const Enroll = ({ save }) => {
   return (
     <>
       <Button onClick={handleShow} variant="dark" className="">
-        Enroll
+        unEnroll User
       </Button>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Enroll</Modal.Title>
+          <Modal.Title>UnEnroll</Modal.Title>
         </Modal.Header>
         <Form>
           <Modal.Body>
@@ -74,7 +74,7 @@ const Enroll = ({ save }) => {
   );
 };
 
-Enroll.propTypes = {
+Unenroll.propTypes = {
   save: PropTypes.func.isRequired,
 };
-export default Enroll;
+export default Unenroll;

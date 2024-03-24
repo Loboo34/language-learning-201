@@ -1,31 +1,35 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Card, Col, Stack } from "react-bootstrap";
+
 import UpdateUser from "./UpdateUser";
 
-const User = ({ user }) => {
-  const { id, name, phone, email, paymentMethod, languageEnrolled } = user;
+const User = ({ user, update }) => {
+  const { id, name, phoneNo, email, paymentMethod, languageEnrolled } = user;
 
   return (
     <Col key={id}>
-      <Card className=" h-100">
-        <Card.Body className="d-flex  flex-column text-center">
+      <Card className=" h-100 position-relative">
+        <Card.Body className="d-flex  flex-column">
           <Stack>
+            <div className="position-absolute top-0 end-0">
+              <UpdateUser user={user} save={update} />
+            </div>
             <Card.Title>Name: {name}</Card.Title>
-            {/* <UpdateUser user={user} save={update} /> */}
           </Stack>
           <Card.Text>Id: {id}</Card.Text>
           <Card.Text className="flex-grow-1 ">Email: {email}</Card.Text>
-          <Card.Text className="flex-grow-1 ">Phone: {phone}</Card.Text>
+          <Card.Text className="flex-grow-1 ">Phone: {phoneNo}</Card.Text>
           <Card.Text className="flex-grow-1 ">
             paymentMethod: {paymentMethod}
           </Card.Text>
-          <h3>Language:</h3>
+          <Card.Text>Enrolled Language:</Card.Text>
           {languageEnrolled.map((languageEnrolled, index) => (
             <Card.Text key={index} className="flex-grow-1 ">
               {languageEnrolled}
             </Card.Text>
           ))}
+          <Card.Text>Droped Language</Card.Text>
         </Card.Body>
       </Card>
     </Col>

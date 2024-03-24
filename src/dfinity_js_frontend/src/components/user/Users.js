@@ -82,7 +82,7 @@ const Users = () => {
                 user={{
                   ..._user,
                 }}
-                //update={update}
+                update={update}
               />
             ))}
           </Row>
