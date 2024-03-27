@@ -17,7 +17,7 @@ const UpdateUser = ({ user, save }) => {
     <>
       <Button
         onClick={handleShow}
-        variant="dark"
+        //variant="dark"
         className="rounded-pill"
         // style={{ width: "38px" }}
       >
@@ -59,17 +59,19 @@ const UpdateUser = ({ user, save }) => {
               />
             </FloatingLabel>
             <FloatingLabel
-              controlId="inputPaymentMethode"
-              label="Payment Methode"
+              controlId="selectPaymentMethod"
+              label="Payment Method"
               className="mb-3"
             >
-              <Form.Control
-                type="text"
-                placeholder="Payment Methode"
+              <Form.Select
                 onChange={(e) => {
                   setPaymentMethod(e.target.value);
                 }}
-              />
+              >
+                <option value="">Select Payment Method</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="PayPal">PayPal</option>
+              </Form.Select>
             </FloatingLabel>
           </Modal.Body>
         </Form>

@@ -16,6 +16,29 @@ const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        await getUserList();
+      } catch (error) {
+        console.log({ error });
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   // function to get the list of users
   const getUsers = useCallback(async () => {
     try {
@@ -43,20 +66,20 @@ const Users = () => {
     }
   };
 
-  // const update = async (data) => {
-  //   try {
-  //     setLoading(true);
-  //     updateUser(data).then((resp) => {
-  //       getUsers();
-  //     });
-  //     toast(<NotificationSuccess text="User added successfully." />);
-  //   } catch (error) {
-  //     console.log({ error });
-  //     toast(<NotificationError text="Failed to create a user." />);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const update = async (data) => {
+    try {
+      setLoading(true);
+      updateUser(data).then((resp) => {
+        getUsers();
+      });
+      toast(<NotificationSuccess text="User info Updated successfully." />);
+    } catch (error) {
+      console.log({ error });
+      toast(<NotificationError text="Failed to Update user info." />);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     getUsers();
@@ -86,7 +109,7 @@ const Users = () => {
               />
             ))}
           </Row>
-          <div className="d-flex align-items-center">
+          <div className="d-flex align-items-center mb-4">
             <AddUser save={addUser} />
           </div>
         </>

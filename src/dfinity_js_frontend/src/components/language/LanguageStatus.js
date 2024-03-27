@@ -16,6 +16,29 @@ import Unenroll from "./Unenroll";
 const StatusButton = () => {
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        await getUserList();
+      } catch (error) {
+        console.log({ error });
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const getUsers = useCallback(async () => {
     try {
       setLoading(true);

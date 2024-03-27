@@ -34,7 +34,7 @@ const Language = Record({
   duration: text,
   fee: text,
   students: Vec(text),
-  teacher: Principal
+  teacher: Principal,
 });
 
 const LanguagePayload = Record({
@@ -70,6 +70,13 @@ const User = Record({
 
 const UserPayload = Record({
   name: text,
+  email: text,
+  phoneNo: text,
+  paymentMethod: text,
+});
+
+const UpdateUserPayload = Record({
+  id: text,
   email: text,
   phoneNo: text,
   paymentMethod: text,
@@ -127,7 +134,6 @@ export default Canister({
     return languageStorage.get(id);
   }),
 
-
   //delete language
   deleteLanguage: update([text], Result(text, Message), (id) => {
     const language = languageStorage.get(id);
@@ -148,7 +154,7 @@ export default Canister({
       id: userId,
       languageEnrolled: [],
       enrollmentStatus: { Pending: "Pending" },
-      LessonProgress: { NotStarted: "NotStarted"},
+      LessonProgress: { NotStarted: "NotStarted" },
       completed: [],
       ...payload,
     };
@@ -161,14 +167,18 @@ export default Canister({
   }),
 
   //update user
-  updateUser: update([text, UserPayload], Result(User, Message), (id, payload) => {
-    const userOpt = userStorage.get(id);
+  updateUser: update([UpdateUserPayload], Result(User, Message), (payload) => {
+    const userOpt = userStorage.get(payload.id);
     if ("None" in userOpt) {
-      return Err({ NotFound: `User with ID ${id} not found` });
+      return Err({ NotFound: `user with id=${payload.id} not found` });
     }
     const user = userOpt.Some;
-    userStorage.insert(id, { ...user, ...payload });
-    return Ok(user);
+    const updatedUser = {
+      ...user,
+      ...payload,
+    };
+    userStorage.insert(user.id, updatedUser);
+    return Ok(updatedUser);
   }),
 
   //delete user
@@ -216,7 +226,6 @@ export default Canister({
     const language = languageOpt.Some;
     return language.students;
   }),
-
 
   unenrollUser: update(
     [text, text],
@@ -294,7 +303,7 @@ export default Canister({
       user.LessonProgress = { InProgress: "InProgress" };
       const language = languageOpt.Some;
       language.students = language.students.filter(
-        (id: string) => id!== userId
+        (id: string) => id !== userId
       );
       userStorage.insert(userId, user);
       languageStorage.insert(languageId, language);
@@ -334,8 +343,6 @@ export default Canister({
     const user = userOpt.Some;
     return user.enrollmentStatus;
   }),
-
-  
 
   //pay for course
   payForCourse: update(
