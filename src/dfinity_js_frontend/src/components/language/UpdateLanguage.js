@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Modal, Form, FloatingLabel, Stack } from "react-bootstrap";
 
 const UpdateLanguage = ({ language, save }) => {
-  // Check if language is defined, otherwise provide default values
+ 
   const initialDuration = language ? language.duration : "";
   const initialFee = language ? language.fee : "";
 

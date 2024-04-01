@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Button, Modal, Form, FloatingLabel } from "react-bootstrap";
 
-const Enroll = ({ save }) => {
+const Enroll = ({ enroll }) => {
   const [userId, setUserId] = useState("");
-  const [languageId, setLanguageId] = useState("");
 
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const isFormFilled = () => userId && languageId;
+  const isFormFilled = () => userId;
 
   return (
     <>
@@ -38,20 +37,7 @@ const Enroll = ({ save }) => {
                 placeholder="Enter user ID"
               />
             </FloatingLabel>
-            <FloatingLabel
-              controlId="inputLanguageId"
-              label="Language ID"
-              className="mb-3"
-            >
-              <Form.Control
-                type="text"
-                value={languageId}
-                onChange={(e) => {
-                  setLanguageId(e.target.value);
-                }}
-                placeholder="Enter Language ID"
-              />
-            </FloatingLabel>
+          
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
@@ -61,7 +47,7 @@ const Enroll = ({ save }) => {
               variant="dark"
               disabled={!isFormFilled()}
               onClick={() => {
-                save(userId, languageId);
+                enroll(userId);
                 handleClose();
               }}
             >
@@ -75,6 +61,6 @@ const Enroll = ({ save }) => {
 };
 
 Enroll.propTypes = {
-  save: PropTypes.func.isRequired,
+  enroll: PropTypes.func.isRequired,
 };
 export default Enroll;

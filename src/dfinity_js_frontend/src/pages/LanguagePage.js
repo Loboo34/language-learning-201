@@ -4,7 +4,6 @@ import Wallet from "../components/Wallet";
 import { login, logout as destroy } from "../utils/auth";
 import { Notification } from "../components/utils/Notifications";
 import Languages from "../components/language/Languages";
-import StatusButton from "../components/language/LanguageStatus";
 import Cover from "../components/utils/Cover";
 import coverImg from "../assets/img/sandwich.jpg";
 
@@ -28,7 +27,6 @@ const LanguagesPage = () => {
           </Nav>
           <main>
             <Languages />
-            <StatusButton />
           </main>
         </Container>
       ) : (

@@ -59,16 +59,8 @@ export async function getLanguage(languageId) {
 }
 
 //function to enroll user in language
-export async function enrollUser(user) {
-  try {
-    return await window.canister.languageLearning.enrollUser(user);
-  } catch (err) {
-    if (err.name === "AgentHTTPResponseError") {
-      const authClient = window.auth.client;
-      await authClient.logout();
-    }
-    return [];
-  }
+export async function enrollUser(Enrollment) {
+  return window.canister.languageLearning.enrollUser(Enrollment);
 }
 
 //get enrolled users
@@ -97,8 +89,8 @@ export async function deleteUser(languageId) {
 }
 
 //unenroll
-export async function unenrollUser(id) {
-  return window.canister.languageLearning.unenrollUser(id);
+export async function unenrollUser(Enrollment) {
+  return window.canister.languageLearning.unenrollUser(Enrollment);
 }
 
 //complete language

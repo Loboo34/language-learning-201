@@ -29,7 +29,6 @@ const User = ({ user, update }) => {
               {languageEnrolled}
             </Card.Text>
           ))}
-          <Card.Text>Droped Language</Card.Text>
         </Card.Body>
       </Card>
     </Col>

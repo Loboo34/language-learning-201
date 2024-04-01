@@ -7,7 +7,7 @@ const AddUser = ({ save }) => {
   const [email, setEmail] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
-  // const [languageEnrolled, setLanguageEnrolled] = useState("");
+ 
 
   const isFormFilled = () => name && email && phoneNo && paymentMethod;
 
