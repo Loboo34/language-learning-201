@@ -93,10 +93,10 @@ export async function unenrollUser(Enrollment) {
   return window.canister.languageLearning.unenrollUser(Enrollment);
 }
 
-//complete language
-export async function completeLanguage(languageId) {
-  return window.canister.languageLearning.completeLanguage(languageId);
-}
+// //complete language
+// export async function completeLanguage(languageId) {
+//   return window.canister.languageLearning.completeLanguage(languageId);
+// }
 
 //drop language
 export async function dropLanguage(languageId) {
